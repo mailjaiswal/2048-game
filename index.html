@@ -22,14 +22,9 @@
 
     <h1 class="app-title">2048 Tactile</h1>
 
-    <div class="top-actions">
-      <button id="btnThemeToggle" class="icon-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light / Dark Mode">
-        <span class="material-symbols-outlined" id="themeModeIcon">dark_mode</span>
-      </button>
-      <button id="btnSettings" class="icon-btn" title="Settings & Rules" aria-label="Settings & Rules">
-        <span class="material-symbols-outlined">settings</span>
-      </button>
-    </div>
+    <button id="btnSettings" class="icon-btn" title="Settings & Rules" aria-label="Settings & Rules">
+      <span class="material-symbols-outlined">settings</span>
+    </button>
   </header>
 
   <!-- Main Content -->
@@ -91,9 +86,9 @@
       <span class="material-symbols-outlined">refresh</span>
       <span>Reset</span>
     </button>
-    <button id="btnThemes" class="nav-tab-btn" title="Switch Theme">
-      <span class="material-symbols-outlined">palette</span>
-      <span>Themes</span>
+    <button id="btnThemeToggle" class="nav-tab-btn" title="Toggle Light / Dark Mode">
+      <span class="material-symbols-outlined" id="themeModeIcon">dark_mode</span>
+      <span id="themeModeLabel">Theme</span>
     </button>
     <button id="btnStats" class="nav-tab-btn" title="Statistics">
       <span class="material-symbols-outlined">leaderboard</span>
@@ -158,23 +153,17 @@
       <div class="theme-grid" id="themeOptions">
         <button class="theme-card-btn selected" data-theme="forest">
           <span class="theme-swatch" style="background: linear-gradient(135deg, #E8F0E5, #4A5D45);"></span>
-          <span>Forest Fresh</span>
-        </button>
-        <button class="theme-card-btn" data-theme="pastel">
-          <span class="theme-swatch" style="background: linear-gradient(135deg, #e6dfff, #6750a4);"></span>
-          <span>Pastel Dream</span>
+          <div>
+            <div>Forest Fresh</div>
+            <div style="font-size: 11px; font-weight: 500; opacity: 0.8;">Light Profile ☀️</div>
+          </div>
         </button>
         <button class="theme-card-btn" data-theme="dark">
           <span class="theme-swatch" style="background: linear-gradient(135deg, #141218, #cfbcff);"></span>
-          <span>Dark Logic</span>
-        </button>
-        <button class="theme-card-btn" data-theme="classic">
-          <span class="theme-swatch" style="background: linear-gradient(135deg, #faf8ef, #8f7a66);"></span>
-          <span>Classic Warm</span>
-        </button>
-        <button class="theme-card-btn" data-theme="cyberpunk">
-          <span class="theme-swatch" style="background: linear-gradient(135deg, #0b091a, #00f0ff);"></span>
-          <span>Cyberpunk</span>
+          <div>
+            <div>Dark Theme</div>
+            <div style="font-size: 11px; font-weight: 500; opacity: 0.8;">Dark Profile 🌙</div>
+          </div>
         </button>
       </div>
 
@@ -240,9 +229,80 @@
         <p>• <strong>Offline & PWA:</strong> Fully playable without internet connection. Add to home screen for an authentic mobile app experience.</p>
       </div>
 
-      <button class="tactile-btn modal-close-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+      <button id="btnShowInstallGuide" class="tactile-btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 4px;">
+        <span class="material-symbols-outlined">install_desktop</span> How to Add to Desktop / Phone
+      </button>
+
+      <button class="tactile-btn modal-close-btn" style="width: 100%; justify-content: center; margin-top: 4px;">
         Got it!
       </button>
+    </div>
+  </div>
+
+  <!-- Modal: First-Time Desktop & Mobile Install Guide Overlay -->
+  <div id="onboardingOverlay" class="modal-layer onboarding-layer">
+    <div class="modal-card onboarding-card">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="material-symbols-outlined">install_desktop</span> Add 2048 to Desktop / Mobile
+        </h3>
+        <button class="icon-btn modal-close-btn" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <p class="onboarding-subtitle">
+        Save the web app to your Desktop or Home Screen for instant 1-click offline play in full screen!
+      </p>
+
+      <!-- 3-Step Flow Container -->
+      <div class="onboarding-steps-container">
+        <!-- Step 1 (Left) -->
+        <div class="onboarding-step">
+          <div class="step-badge">1</div>
+          <div class="step-icon-box">
+            <span class="material-symbols-outlined">more_vert</span>
+          </div>
+          <div class="step-title">Open Menu</div>
+          <div class="step-desc">Click browser <strong>⋮ menu</strong> or <strong>Share</strong> icon</div>
+        </div>
+
+        <!-- Arrow 1 -> 2 -->
+        <div class="step-arrow">
+          <span class="material-symbols-outlined">east</span>
+        </div>
+
+        <!-- Step 2 (Middle) -->
+        <div class="onboarding-step">
+          <div class="step-badge">2</div>
+          <div class="step-icon-box">
+            <span class="material-symbols-outlined">add_to_home_screen</span>
+          </div>
+          <div class="step-title">Install App</div>
+          <div class="step-desc">Select <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong></div>
+        </div>
+
+        <!-- Arrow 2 -> 3 -->
+        <div class="step-arrow">
+          <span class="material-symbols-outlined">east</span>
+        </div>
+
+        <!-- Step 3 (Right) -->
+        <div class="onboarding-step">
+          <div class="step-badge">3</div>
+          <div class="step-icon-box">
+            <span class="material-symbols-outlined">rocket_launch</span>
+          </div>
+          <div class="step-title">Play Instantly</div>
+          <div class="step-desc">Launch directly from your desktop icon offline!</div>
+        </div>
+      </div>
+
+      <div class="onboarding-footer">
+        <button id="btnGotItOnboarding" class="tactile-btn" style="width: 100%; justify-content: center; padding: 12px 24px; font-size: 1rem;">
+          <span class="material-symbols-outlined">play_arrow</span> Got it, Let's Play!
+        </button>
+      </div>
     </div>
   </div>
 

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>2048 - Forest Fresh</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600&amp;family=JetBrains+Mono:wght@600&amp;family=Sora:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary": "#342b4b",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-dim": "#141218",
+                        "primary-container": "#6750a4",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-surface-variant": "#cbc4d2",
+                        "surface-container-lowest": "#0f0d13",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#241a00",
+                        "secondary-container": "#4d4465",
+                        "outline": "#948e9c",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface": "#141218",
+                        "on-background": "#e6e0e9",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-variant": "#36343a",
+                        "tertiary": "#e7c365",
+                        "secondary": "#cdc0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "tertiary-container": "#c9a74d",
+                        "surface-bright": "#3b383e",
+                        "surface-container-highest": "#36343a",
+                        "on-primary": "#381e72",
+                        "surface-tint": "#cfbcff",
+                        "on-secondary-container": "#bfb2da",
+                        "on-primary-fixed": "#22005d",
+                        "on-surface": "#e6e0e9",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "background": "#141218",
+                        "inverse-primary": "#6750a4",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-container-high": "#2b292f",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1d1b20",
+                        "on-tertiary": "#3e2e00",
+                        "on-secondary-fixed": "#1f1635",
+                        "inverse-on-surface": "#322f35",
+                        "primary-fixed": "#e9ddff",
+                        "surface-container": "#211f24",
+                        "secondary-fixed": "#e9ddff",
+
+                        // Forest Fresh Theme Overrides mapping to existing tokens where possible, or custom if needed for the specific aesthetic requested.
+                        // Using a subtle sage/earthy palette mapped into the tailwind tokens to maintain structural integrity while achieving the look.
+                        "forest-bg": "#E8F0E5",
+                        "forest-board": "#C6D5C0",
+                        "forest-tile-empty": "#A9BDA1",
+                        "forest-text": "#4A5D45",
+                        
+                        "tile-2": "#EAE7D6",
+                        "tile-4": "#E1DFCA",
+                        "tile-8": "#E4B68D",
+                        "tile-16": "#E4966B",
+                        "tile-32": "#D67A62",
+                        "tile-64": "#C65C47",
+                        "tile-128": "#ECD581",
+                        "tile-256": "#EDCC61",
+                        "tile-512": "#EAC250",
+                        "tile-1024": "#E9B838",
+                        "tile-2048": "#E6B022",
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "tile": "8px", // Added slightly rounder for tactile feel
+                    },
+                    spacing: {
+                        "tile-size": "calc((100% - 36px) / 4)",
+                        "container-max": "500px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "grid-gap": "12px",
+                        "stack-sm": "8px",
+                        "grid-padding": "12px",
+                        "safe": "env(safe-area-inset-bottom)"
+                    },
+                    fontFamily: {
+                        "tile-number-md": ["Sora", "sans-serif"],
+                        "ui-button": ["Hanken Grotesk", "sans-serif"],
+                        "body-text": ["Hanken Grotesk", "sans-serif"],
+                        "score-label": ["JetBrains Mono", "monospace"],
+                        "modal-title": ["Sora", "sans-serif"],
+                        "tile-number-lg": ["Sora", "sans-serif"],
+                        "score-value": ["Sora", "sans-serif"]
+                    },
+                    fontSize: {
+                        "tile-number-md": ["36px", { lineHeight: "36px", fontWeight: "800" }],
+                        "ui-button": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+                        "body-text": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "score-label": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "modal-title": ["32px", { lineHeight: "40px", fontWeight: "800" }],
+                        "tile-number-lg": ["48px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "score-value": ["24px", { lineHeight: "24px", fontWeight: "700" }]
+                    },
+                    boxShadow: {
+                        'tactile': '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                        'tactile-inset': 'inset 0px 4px 8px rgba(0, 0, 0, 0.1)',
+                        'btn': '0px 2px 0px rgba(0,0,0,0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Force light mode background for the Forest Theme override despite html.dark */
+        body {
+            background-color: #E8F0E5; /* forest-bg */
+            color: #4A5D45; /* forest-text */
+        }
+        
+        .tile-pop {
+            animation: pop 0.2s ease-in-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-press:active {
+            transform: translateY(2px);
+            box-shadow: 0px 0px 0px rgba(0,0,0,0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center justify-start pb-[100px] font-body-text text-body-text">
+<!-- TopAppBar -->
+<header class="w-full top-0 bg-background dark:bg-background z-40 fixed md:relative" style="background-color: transparent;">
+<div class="flex justify-between items-center px-grid-padding py-stack-md max-w-container-max mx-auto w-full">
+<button aria-label="Menu" class="text-primary dark:text-primary hover:bg-surface-variant rounded-full transition-colors active:scale-95 transition-transform duration-100 p-2 flex items-center justify-center" style="color: #4A5D45;">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<h1 class="font-modal-title text-modal-title tracking-tighter" style="color: #4A5D45;">2048 Tactile</h1>
+<button aria-label="Settings" class="text-primary dark:text-primary hover:bg-surface-variant rounded-full transition-colors active:scale-95 transition-transform duration-100 p-2 flex items-center justify-center" style="color: #4A5D45;">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<main class="w-full max-w-container-max px-grid-padding mt-20 md:mt-4 flex flex-col gap-6 items-center">
+<!-- Score Board Stacked for Mobile -->
+<div class="flex gap-4 w-full justify-center">
+<!-- Current Score -->
+<div class="flex flex-col items-center justify-center py-2 px-6 rounded-xl shadow-tactile" style="background-color: rgba(198, 213, 192, 0.5);">
+<span class="font-score-label text-score-label" style="color: #4A5D45;">SCORE</span>
+<span class="font-score-value text-score-value" style="color: #4A5D45;">2480</span>
+</div>
+<!-- Best Score -->
+<div class="flex flex-col items-center justify-center py-2 px-6 rounded-xl shadow-tactile" style="background-color: rgba(198, 213, 192, 0.5);">
+<span class="font-score-label text-score-label" style="color: #4A5D45;">BEST</span>
+<span class="font-score-value text-score-value" style="color: #4A5D45;">12450</span>
+</div>
+</div>
+<!-- Game Board Container -->
+<div class="w-full aspect-square rounded-2xl p-grid-padding shadow-tactile-inset" style="background-color: #C6D5C0; max-width: 95vw; md:max-width: 500px;">
+<div class="w-full h-full grid grid-cols-4 grid-rows-4 gap-grid-gap">
+<!-- Row 1 -->
+<div class="rounded-tile flex items-center justify-center" style="background-color: #A9BDA1;"></div>
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #EAE7D6;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #4A5D45;">2</span>
+</div>
+<div class="rounded-tile flex items-center justify-center" style="background-color: #A9BDA1;"></div>
+<div class="rounded-tile flex items-center justify-center" style="background-color: #A9BDA1;"></div>
+<!-- Row 2 -->
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #E1DFCA;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #4A5D45;">4</span>
+</div>
+<div class="rounded-tile flex items-center justify-center shadow-tactile tile-pop" style="background-color: #E4B68D;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #fff;">8</span>
+</div>
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #E4966B;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #fff;">16</span>
+</div>
+<div class="rounded-tile flex items-center justify-center" style="background-color: #A9BDA1;"></div>
+<!-- Row 3 -->
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #EAE7D6;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #4A5D45;">2</span>
+</div>
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #E1DFCA;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #4A5D45;">4</span>
+</div>
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #D67A62;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #fff;">32</span>
+</div>
+<div class="rounded-tile flex items-center justify-center" style="background-color: #A9BDA1;"></div>
+<!-- Row 4 -->
+<div class="rounded-tile flex items-center justify-center" style="background-color: #A9BDA1;"></div>
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #C65C47;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #fff;">64</span>
+</div>
+<div class="rounded-tile flex items-center justify-center" style="background-color: #A9BDA1;"></div>
+<div class="rounded-tile flex items-center justify-center shadow-tactile" style="background-color: #E4B68D;">
+<span class="font-tile-number-md text-tile-number-md" style="color: #fff;">8</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container dark:bg-surface-container-lowest rounded-t-xl shadow-[0_-4px_12px_rgba(0,0,0,0.1)] shadow-lg md:hidden" style="background-color: #C6D5C0;">
+<button class="flex flex-col items-center justify-center px-4 py-1 hover:bg-surface-bright dark:hover:bg-surface-variant rounded-xl active:translate-y-[1px] transition-all duration-100" style="color: #4A5D45;">
+<span class="material-symbols-outlined mb-1">undo</span>
+<span class="font-ui-button text-[12px] font-semibold">Undo</span>
+</button>
+<button class="flex flex-col items-center justify-center px-4 py-1 hover:bg-surface-bright dark:hover:bg-surface-variant rounded-xl active:translate-y-[1px] transition-all duration-100" style="color: #4A5D45;">
+<span class="material-symbols-outlined mb-1">refresh</span>
+<span class="font-ui-button text-[12px] font-semibold">Reset</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:translate-y-[1px] transition-all duration-100" style="background-color: rgba(74, 93, 69, 0.2); color: #4A5D45;">
+<span class="material-symbols-outlined mb-1">palette</span>
+<span class="font-ui-button text-[12px] font-semibold">Themes</span>
+</button>
+</nav>
+<script>
+        // Simple script to re-trigger pop animation occasionally for demo purposes
+        setInterval(() => {
+            const popTile = document.querySelector('.tile-pop');
+            if(popTile) {
+                popTile.classList.remove('tile-pop');
+                void popTile.offsetWidth; // trigger reflow
+                popTile.classList.add('tile-pop');
+            }
+        }, 3000);
+    </script>
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#4A5D45]/80 backdrop-blur-sm" id="pwa-overlay">
+<div class="bg-[#E8F0E5] rounded-2xl p-6 max-w-[320px] w-full shadow-2xl flex flex-col items-center gap-6">
+<h2 class="font-modal-title text-modal-title text-[#4A5D45] text-center">Install App</h2>
+<div class="flex flex-col items-center w-full gap-4">
+<!-- Step 1 -->
+<div class="flex flex-col items-center gap-2"><div class="w-12 h-12 rounded-full bg-[#C6D5C0] flex items-center justify-center text-[#4A5D45]"><span class="material-symbols-outlined">more_vert</span></div><span class="font-ui-button text-[12px] text-center text-[#4A5D45]">Open Browser Menu</span></div>
+<span class="material-symbols-outlined text-[#A9BDA1] rotate-90">arrow_forward</span>
+<!-- Step 2 -->
+<div class="flex flex-col items-center gap-2"><div class="w-12 h-12 rounded-full bg-[#C6D5C0] flex items-center justify-center text-[#4A5D45]"><span class="material-symbols-outlined">install_mobile</span></div><span class="font-ui-button text-[12px] text-center text-[#4A5D45]">Install App</span></div>
+<span class="material-symbols-outlined text-[#A9BDA1] rotate-90">arrow_forward</span>
+<!-- Step 3 -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-xl bg-[#C65C47] flex items-center justify-center text-white shadow-tactile">
+<span class="font-tile-number-md text-[14px]">2048</span>
+</div>
+<span class="font-ui-button text-[12px] text-center text-[#4A5D45]">Open from Home Screen</span>
+</div>
+</div>
+<button class="w-full py-4 bg-[#4A5D45] text-[#E8F0E5] font-ui-button rounded-xl shadow-tactile active:scale-95 transition-transform" onclick="document.getElementById('pwa-overlay').remove()">
+      Got it
+    </button>
+</div>
+</div></body></html>

@@ -48,12 +48,18 @@ class GameManager {
         this.bestScores = JSON.parse(savedScores);
       }
 
-      const savedTheme = localStorage.getItem('2048_theme') || 'forest';
+      let savedTheme = localStorage.getItem('2048_theme') || 'forest';
+      if (savedTheme !== 'forest' && savedTheme !== 'dark') {
+        savedTheme = 'forest';
+      }
       this.setTheme(savedTheme);
 
       const savedSize = localStorage.getItem('2048_size');
       if (savedSize) {
-        this.size = parseInt(savedSize, 10);
+        const parsed = parseInt(savedSize, 10);
+        this.size = [3, 4, 5, 6, 8].includes(parsed) ? parsed : 4;
+      } else {
+        this.size = 4;
       }
 
       const savedMode = localStorage.getItem('2048_mode');
@@ -66,38 +72,35 @@ class GameManager {
   }
 
   isDarkTheme(themeName = this.theme) {
-    return themeName === 'dark' || themeName === 'cyberpunk';
+    return themeName === 'dark';
   }
 
   setTheme(themeName) {
-    this.theme = themeName;
-    document.body.setAttribute('data-theme', themeName);
-    localStorage.setItem('2048_theme', themeName);
-
-    if (!this.isDarkTheme(themeName)) {
-      localStorage.setItem('2048_last_light_theme', themeName);
-    }
+    // Retain only forest (light) and dark (dark)
+    const activeTheme = themeName === 'dark' ? 'dark' : 'forest';
+    this.theme = activeTheme;
+    document.body.setAttribute('data-theme', activeTheme);
+    localStorage.setItem('2048_theme', activeTheme);
 
     // Update active state on theme chips
     document.querySelectorAll('#themeOptions .theme-card-btn').forEach(btn => {
-      btn.classList.toggle('selected', btn.getAttribute('data-theme') === themeName);
+      btn.classList.toggle('selected', btn.getAttribute('data-theme') === activeTheme);
     });
 
-    // Update Light / Dark toggle icon
+    // Update Light / Dark toggle icon & label in bottom nav
     const themeModeIcon = document.getElementById('themeModeIcon');
+    const themeModeLabel = document.getElementById('themeModeLabel');
     if (themeModeIcon) {
-      // If currently dark, show sun (light_mode) to switch to light; if currently light, show moon (dark_mode) to switch to dark
-      themeModeIcon.textContent = this.isDarkTheme(themeName) ? 'light_mode' : 'dark_mode';
+      themeModeIcon.textContent = activeTheme === 'dark' ? 'light_mode' : 'dark_mode';
+    }
+    if (themeModeLabel) {
+      themeModeLabel.textContent = activeTheme === 'dark' ? 'Light' : 'Dark';
     }
   }
 
   toggleThemeMode() {
-    if (this.isDarkTheme()) {
-      const target = localStorage.getItem('2048_last_light_theme') || 'forest';
-      this.setTheme(target);
-    } else {
-      this.setTheme('dark');
-    }
+    const nextTheme = this.theme === 'dark' ? 'forest' : 'dark';
+    this.setTheme(nextTheme);
     if (window.soundEngine) {
       window.soundEngine.playClick();
     }
@@ -828,6 +831,25 @@ class GameManager {
         const modal = e.target.closest('.modal-layer');
         if (modal) modal.classList.remove('active');
       });
+    });
+
+    // First-Time Onboarding Overlay Actions
+    const hasSeenOnboarding = localStorage.getItem('2048_has_seen_onboarding');
+    if (!hasSeenOnboarding) {
+      setTimeout(() => {
+        this.openModal('onboardingOverlay');
+      }, 400);
+    }
+
+    document.getElementById('btnGotItOnboarding')?.addEventListener('click', () => {
+      localStorage.setItem('2048_has_seen_onboarding', 'true');
+      this.closeModal('onboardingOverlay');
+      if (window.soundEngine) window.soundEngine.playClick();
+    });
+
+    document.getElementById('btnShowInstallGuide')?.addEventListener('click', () => {
+      this.closeModal('settingsModal');
+      this.openModal('onboardingOverlay');
     });
 
     // Confirmation Modal Action

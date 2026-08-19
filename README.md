@@ -20,14 +20,20 @@ Built with pure **HTML5, CSS3, and modern Vanilla JavaScript**, featuring proced
 - **Time Rush (60s):** Race against a 60-second countdown timer to achieve the highest score possible.
 - **Practice Mode:** Explore strategies with unlimited multi-step **Undo**.
 
-### 🎨 3. Beautiful Themes & Quick Light/Dark Switcher
-Switch themes anytime with live preview:
-- ☀️ / 🌙 **Quick Light / Dark Profile Switcher:** One-tap header icon to switch between Light profiles (Forest Fresh, Pastel Dream, Classic Warm) and Dark profiles (Dark Logic, Cyberpunk).
-- 🌿 **Forest Fresh:** Calming organic greens and earth tones (from the design mock).
-- 🌸 **Pastel Dream:** Soft, modern pastel aesthetics with peach and sky blue tiles.
-- 🌙 **Dark Logic (OLED):** High-contrast AMOLED-friendly dark mode.
-- 🎨 **Classic Warm:** Authentic 2048 color palette.
-- ⚡ **Cyberpunk:** Vibrant neon and synthwave colors.
+### 🎨 3. Curated Themes (Forest Fresh ☀️ & Dark Theme 🌙)
+Switch between the two visual profiles anytime:
+- ☀️ / 🌙 **Quick Light / Dark Profile Switcher:** One-tap header icon to switch between **Forest Fresh** (Light) and **Dark Theme** (Dark).
+- 🌿 **Forest Fresh (Light Profile):** Calming organic greens and earth tones from the tactile design mock (`#E8F0E5` bg, `#C6D5C0` board, `#A9BDA1` slots, `#4A5D45` accents).
+- 🌙 **Dark Theme (Dark Profile):** High-contrast OLED dark mode with tactile purple and gold accents (`#141218` background, `#cfbcff` lavender).
+
+### 🚀 4. First-Time Onboarding Overlay (Install Guide)
+- Automatically displays a translucent theme-matching 3-step guide upon first launch:
+  1. **Step 1 (Left):** Open browser menu (`⋮`) or `Share` icon.
+  2. ➔ **Arrow:** Points to step 2.
+  3. **Step 2 (Middle):** Select *"Add to Home Screen"* or *"Install App"*.
+  4. ➔ **Arrow:** Points to step 3.
+  5. **Step 3 (Right):** Launch & play instantly as a full-screen desktop/mobile app offline.
+- Can also be re-opened anytime from the Settings modal.
 
 ### 🔊 4. Web Audio & Haptics Engine
 - **Procedural Audio:** Synthesized in real-time via Web Audio API (zero heavy audio files to load).

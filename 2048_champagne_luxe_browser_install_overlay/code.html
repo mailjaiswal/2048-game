@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>2048 - Champagne Luxe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&amp;family=JetBrains+Mono:wght@600&amp;family=Hanken+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary": "#342b4b",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "inverse-primary": "#6750a4",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "secondary": "#cdc0e9",
+                        "outline": "#948e9c",
+                        "surface": "#141218",
+                        "on-primary-container": "#e0d2ff",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#241a00",
+                        "outline-variant": "#494551",
+                        "tertiary-container": "#c9a74d",
+                        "on-secondary-container": "#bfb2da",
+                        "on-error-container": "#ffdad6",
+                        "surface-dim": "#141218",
+                        "tertiary": "#e7c365",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "tertiary-fixed": "#ffdf93",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#322f35",
+                        "on-error": "#690005",
+                        "on-primary": "#381e72",
+                        "surface-container-lowest": "#0f0d13",
+                        "on-primary-fixed": "#22005d",
+                        "surface-tint": "#cfbcff",
+                        "on-surface": "#e6e0e9",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container": "#211f24",
+                        "secondary-container": "#4d4465",
+                        "surface-container-high": "#2b292f",
+                        "on-background": "#e6e0e9",
+                        "background": "#141218",
+                        "inverse-surface": "#e6e0e9",
+                        "primary": "#cfbcff",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-bright": "#3b383e",
+                        "on-tertiary-container": "#503d00",
+                        "on-surface-variant": "#cbc4d2",
+                        "primary-fixed": "#e9ddff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-tertiary": "#3e2e00",
+                        "surface-variant": "#36343a",
+                        "primary-container": "#6750a4",
+                        "surface-container-low": "#1d1b20"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "tile-size": "calc((100% - 36px) / 4)",
+                        "grid-padding": "12px",
+                        "container-max": "500px",
+                        "grid-gap": "12px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px"
+                    },
+                    fontFamily: {
+                        "tile-number-md": ["Sora"],
+                        "score-label": ["JetBrains Mono"],
+                        "score-value": ["Sora"],
+                        "modal-title": ["Sora"],
+                        "tile-number-lg": ["Sora"],
+                        "ui-button": ["Hanken Grotesk"],
+                        "body-text": ["Hanken Grotesk"]
+                    },
+                    fontSize: {
+                        "tile-number-md": ["36px", { lineHeight: "36px", fontWeight: "800" }],
+                        "score-label": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "score-value": ["24px", { lineHeight: "24px", fontWeight: "700" }],
+                        "modal-title": ["32px", { lineHeight: "40px", fontWeight: "800" }],
+                        "tile-number-lg": ["48px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "ui-button": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+                        "body-text": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .champagne-border {
+            border: 1px solid rgba(231, 195, 101, 0.4);
+            box-shadow: inset 0 0 10px rgba(231, 195, 101, 0.1);
+        }
+        .tile-pop {
+            animation: pop 0.2s ease-in-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-text">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-grid-padding max-w-container-max mx-auto h-16 bg-background">
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-100 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="grid_view" style="font-variation-settings: 'FILL' 0;">grid_view</span>
+</button>
+<h1 class="text-tile-number-md font-tile-number-md text-primary tracking-tighter">2048</h1>
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-100 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</header>
+<!-- Main Game Container -->
+<main class="flex-grow flex flex-col items-center justify-center px-4 w-full max-w-container-max mx-auto pb-24">
+<!-- Score Board Area -->
+<div class="flex justify-between w-full mb-stack-md gap-4">
+<div class="flex-1 bg-surface-container champagne-border rounded-xl p-3 flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-surface-container-high opacity-50"></div>
+<span class="font-score-label text-score-label text-tertiary relative z-10">SCORE</span>
+<span class="font-score-value text-score-value text-on-surface relative z-10">4096</span>
+</div>
+<div class="flex-1 bg-surface-container champagne-border rounded-xl p-3 flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-surface-container-high opacity-50"></div>
+<span class="font-score-label text-score-label text-tertiary relative z-10">BEST</span>
+<span class="font-score-value text-score-value text-on-surface relative z-10">16384</span>
+</div>
+</div>
+<!-- Game Board -->
+<div class="bg-surface-container-lowest rounded-xl p-grid-padding w-full aspect-square relative champagne-border shadow-lg">
+<div class="grid grid-cols-4 grid-rows-4 gap-grid-gap w-full h-full">
+<!-- Grid Cells (Background) -->
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<div class="bg-surface-container rounded-lg inner-shadow"></div>
+<!-- Active Tiles (Absolute Positioning for actual game logic, but rendering inline for layout demo) -->
+<div class="absolute top-[12px] left-[12px] w-tile-size h-tile-size bg-surface-variant rounded-lg flex items-center justify-center champagne-border shadow-sm">
+<span class="font-tile-number-md text-tile-number-md text-on-surface">2</span>
+</div>
+<div class="absolute top-[12px] left-[calc(12px+25%)] w-tile-size h-tile-size bg-surface-bright rounded-lg flex items-center justify-center champagne-border shadow-sm">
+<span class="font-tile-number-md text-tile-number-md text-on-surface">4</span>
+</div>
+<div class="absolute top-[calc(12px+25%)] left-[calc(12px+50%)] w-tile-size h-tile-size bg-tertiary-container rounded-lg flex items-center justify-center champagne-border shadow-md tile-pop">
+<span class="font-tile-number-md text-tile-number-md text-on-tertiary-container">2048</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container shadow-lg rounded-t-xl champagne-border border-b-0">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all active:translate-y-0.5 duration-100">
+<span class="material-symbols-outlined mb-1" data-icon="undo" style="font-variation-settings: 'FILL' 0;">undo</span>
+<span class="font-ui-button text-[10px] leading-tight font-semibold uppercase tracking-wider">Undo</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 hover:bg-surface-container-high transition-all active:translate-y-0.5 duration-100 shadow-sm border border-primary/20">
+<span class="material-symbols-outlined mb-1" data-icon="refresh" style="font-variation-settings: 'FILL' 1;">refresh</span>
+<span class="font-ui-button text-[10px] leading-tight font-semibold uppercase tracking-wider">Reset</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all active:translate-y-0.5 duration-100">
+<span class="material-symbols-outlined mb-1" data-icon="palette" style="font-variation-settings: 'FILL' 0;">palette</span>
+<span class="font-ui-button text-[10px] leading-tight font-semibold uppercase tracking-wider">Themes</span>
+</button>
+</nav>
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-surface/80 backdrop-blur-md transition-opacity duration-300" id="pwa-overlay">
+<div class="w-full max-w-container-max bg-surface-container champagne-border rounded-xl p-8 shadow-2xl flex flex-col items-center gap-6">
+<div class="text-center">
+<h2 class="font-tile-number-md text-2xl text-tertiary mb-2">Install 2048 Luxe</h2>
+<p class="font-body-text text-on-surface-variant text-sm">Add to your home screen for the best experience</p>
+</div>
+<div class="flex flex-col items-center w-full gap-4">
+<!-- Step 1 -->
+<div class="flex items-center gap-4 w-full"><div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary champagne-border shrink-0"><span class="material-symbols-outlined">more_vert</span></div><div class="flex flex-col"><span class="font-ui-button text-[10px] uppercase tracking-widest text-tertiary/60">Step 1</span><span class="font-ui-button text-sm font-semibold tracking-wider text-on-surface">Open Browser Menu</span></div></div>
+<span class="material-symbols-outlined text-tertiary/40 text-lg">arrow_downward</span>
+<!-- Step 2 -->
+<div class="flex items-center gap-4 w-full"><div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary champagne-border shrink-0"><span class="material-symbols-outlined">install_mobile</span></div><div class="flex flex-col"><span class="font-ui-button text-[10px] uppercase tracking-widest text-tertiary/60">Step 2</span><span class="font-ui-button text-sm font-semibold tracking-wider text-on-surface">Install App</span></div></div>
+<span class="material-symbols-outlined text-tertiary/40 text-lg">arrow_downward</span>
+<!-- Step 3 -->
+<div class="flex items-center gap-4 w-full"><div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container shadow-md shrink-0"><span class="font-tile-number-md text-sm">2048</span></div><div class="flex flex-col"><span class="font-ui-button text-[10px] uppercase tracking-widest text-tertiary/60">Step 3</span><span class="font-ui-button text-sm font-semibold tracking-wider text-on-surface">Open from Home Screen</span></div></div>
+</div>
+<button class="w-full py-3 rounded-lg champagne-border text-tertiary font-ui-button uppercase tracking-widest hover:bg-tertiary/10 transition-colors active:scale-[0.98]" onclick="document.getElementById('pwa-overlay').remove()">
+      Got it
+    </button>
+</div>
+</div></body></html>
