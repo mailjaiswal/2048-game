@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#141218">
+  <meta name="description" content="2048 Tactile - Modern responsive number puzzle game with multiple grid sizes, themes, sounds, and offline PWA support.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>2048 Tactile</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body data-theme="forest">
+
+  <!-- TopAppBar -->
+  <header class="top-app-bar">
+    <button id="btnGridMenu" class="icon-btn" title="Board Size & Modes" aria-label="Board Size & Modes">
+      <span class="material-symbols-outlined">grid_view</span>
+    </button>
+
+    <h1 class="app-title">2048 Tactile</h1>
+
+    <div class="top-actions">
+      <button id="btnThemeToggle" class="icon-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light / Dark Mode">
+        <span class="material-symbols-outlined" id="themeModeIcon">dark_mode</span>
+      </button>
+      <button id="btnSettings" class="icon-btn" title="Settings & Rules" aria-label="Settings & Rules">
+        <span class="material-symbols-outlined">settings</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Score Board -->
+    <div class="score-board">
+      <div class="score-card">
+        <span class="score-label">SCORE</span>
+        <span class="score-val" id="scoreDisplay">0</span>
+      </div>
+      <div class="score-card">
+        <span class="score-label">BEST</span>
+        <span class="score-val" id="bestScoreDisplay">0</span>
+      </div>
+    </div>
+
+    <!-- Sub-Status Bar -->
+    <div class="sub-status-bar">
+      <div class="badge-chip">
+        <span class="material-symbols-outlined" style="font-size: 16px;">touch_app</span>
+        <span>Moves: <strong id="movesDisplay">0</strong></span>
+      </div>
+      <div class="badge-chip" id="gridBadge">
+        <span class="material-symbols-outlined" style="font-size: 16px;">grid_4x4</span>
+        <span id="gridSizeLabel">4 × 4</span>
+      </div>
+      <div class="badge-chip" id="timerBadge" style="display: none;">
+        <span class="material-symbols-outlined" style="font-size: 16px;">timer</span>
+        <span id="timerDisplay">60s</span>
+      </div>
+    </div>
+
+    <!-- Game Board Container -->
+    <div id="boardWrapper" class="board-container grid-size-4">
+      <!-- Background Grid Slots -->
+      <div id="gridContainer" class="grid-matrix"></div>
+      <!-- Animated Tiles Layer -->
+      <div id="tileContainer" class="tile-layer"></div>
+
+      <!-- In-Game Overlay (Game Over / You Win) -->
+      <div id="gameOverlay" class="game-overlay">
+        <h2 id="overlayTitle" class="overlay-title">Game Over!</h2>
+        <p id="overlayMsg" class="overlay-msg">No more moves available!</p>
+        <div class="overlay-actions">
+          <button id="btnKeepGoing" class="tactile-btn" style="display: none;">Keep Going</button>
+          <button id="btnRetry" class="tactile-btn btn-secondary">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav-bar">
+    <button id="btnUndo" class="nav-tab-btn" title="Undo Move (Ctrl+Z)" disabled>
+      <span class="material-symbols-outlined">undo</span>
+      <span>Undo</span>
+    </button>
+    <button id="btnNewGame" class="nav-tab-btn" title="Restart / New Game">
+      <span class="material-symbols-outlined">refresh</span>
+      <span>Reset</span>
+    </button>
+    <button id="btnThemes" class="nav-tab-btn" title="Switch Theme">
+      <span class="material-symbols-outlined">palette</span>
+      <span>Themes</span>
+    </button>
+    <button id="btnStats" class="nav-tab-btn" title="Statistics">
+      <span class="material-symbols-outlined">leaderboard</span>
+      <span>Stats</span>
+    </button>
+    <button id="btnSound" class="nav-tab-btn" title="Sound Effects">
+      <span class="material-symbols-outlined" id="soundIcon">volume_up</span>
+      <span>Sound</span>
+    </button>
+  </nav>
+
+  <!-- Modal: Board Size & Game Mode -->
+  <div id="gridModal" class="modal-layer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="material-symbols-outlined">grid_view</span> Grid & Game Mode
+        </h3>
+        <button class="icon-btn modal-close-btn" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div>
+        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-dim); margin-bottom: 8px;">GRID SIZE</p>
+        <div class="chip-grid" id="gridSizeOptions">
+          <button class="chip-btn" data-size="3">3 × 3 (Quick)</button>
+          <button class="chip-btn selected" data-size="4">4 × 4 (Classic)</button>
+          <button class="chip-btn" data-size="5">5 × 5 (Big)</button>
+          <button class="chip-btn" data-size="6">6 × 6 (Giant)</button>
+          <button class="chip-btn" data-size="8">8 × 8 (Extreme)</button>
+        </div>
+      </div>
+
+      <div style="margin-top: 6px;">
+        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-dim); margin-bottom: 8px;">GAME MODE</p>
+        <div class="chip-grid" id="gameModeOptions">
+          <button class="chip-btn selected" data-mode="classic">Classic</button>
+          <button class="chip-btn" data-mode="timerush">Time Rush (60s)</button>
+          <button class="chip-btn" data-mode="practice">Practice (Undo)</button>
+        </div>
+      </div>
+
+      <button class="tactile-btn modal-close-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+        Apply & Play
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Themes Drawer -->
+  <div id="themesModal" class="modal-layer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="material-symbols-outlined">palette</span> Visual Themes
+        </h3>
+        <button class="icon-btn modal-close-btn" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="theme-grid" id="themeOptions">
+        <button class="theme-card-btn selected" data-theme="forest">
+          <span class="theme-swatch" style="background: linear-gradient(135deg, #E8F0E5, #4A5D45);"></span>
+          <span>Forest Fresh</span>
+        </button>
+        <button class="theme-card-btn" data-theme="pastel">
+          <span class="theme-swatch" style="background: linear-gradient(135deg, #e6dfff, #6750a4);"></span>
+          <span>Pastel Dream</span>
+        </button>
+        <button class="theme-card-btn" data-theme="dark">
+          <span class="theme-swatch" style="background: linear-gradient(135deg, #141218, #cfbcff);"></span>
+          <span>Dark Logic</span>
+        </button>
+        <button class="theme-card-btn" data-theme="classic">
+          <span class="theme-swatch" style="background: linear-gradient(135deg, #faf8ef, #8f7a66);"></span>
+          <span>Classic Warm</span>
+        </button>
+        <button class="theme-card-btn" data-theme="cyberpunk">
+          <span class="theme-swatch" style="background: linear-gradient(135deg, #0b091a, #00f0ff);"></span>
+          <span>Cyberpunk</span>
+        </button>
+      </div>
+
+      <button class="tactile-btn modal-close-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+        Done
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Statistics -->
+  <div id="statsModal" class="modal-layer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="material-symbols-outlined">leaderboard</span> Statistics
+        </h3>
+        <button class="icon-btn modal-close-btn" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="stats-tiles">
+        <div class="stat-box">
+          <div class="stat-number" id="statGamesPlayed">0</div>
+          <div class="stat-desc">Games Played</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="statWinRate">0%</div>
+          <div class="stat-desc">Win Rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="statBestTile">0</div>
+          <div class="stat-desc">Highest Tile</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="statBestScore">0</div>
+          <div class="stat-desc">Best Score</div>
+        </div>
+      </div>
+
+      <button class="tactile-btn modal-close-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Settings & How to Play -->
+  <div id="settingsModal" class="modal-layer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="material-symbols-outlined">settings</span> How to Play & Info
+        </h3>
+        <button class="icon-btn modal-close-btn" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-main); display: flex; flex-direction: column; gap: 10px;">
+        <p>• <strong>Swipe</strong> on mobile or use <strong>Arrow Keys / WASD</strong> on desktop to slide matching tiles.</p>
+        <p>• When two tiles with the same number touch, they <strong>merge into one</strong> with double value (e.g. 2 + 2 = 4, 4 + 4 = 8)!</p>
+        <p>• Reach the <strong>2048 tile</strong>, then continue endlessly to achieve record high scores.</p>
+        <p>• <strong>Offline & PWA:</strong> Fully playable without internet connection. Add to home screen for an authentic mobile app experience.</p>
+      </div>
+
+      <button class="tactile-btn modal-close-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+        Got it!
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Restart Confirmation -->
+  <div id="confirmModal" class="modal-layer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="material-symbols-outlined">refresh</span> Restart Game?
+        </h3>
+        <button class="icon-btn modal-close-btn" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <p style="color: var(--text-dim); line-height: 1.5; font-size: 0.92rem;">
+        Are you sure you want to start a new game? Your current board progress will be reset.
+      </p>
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+        <button class="tactile-btn btn-secondary modal-close-btn">Cancel</button>
+        <button id="btnConfirmRestart" class="tactile-btn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas for Victory -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Scripts -->
+  <script src="./audio.js"></script>
+  <script src="./game.js"></script>
+</body>
+</html>

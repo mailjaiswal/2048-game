@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>2048 - Pastel Dream</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600&amp;family=JetBrains+Mono:wght@600&amp;family=Sora:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary": "#342b4b",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-dim": "#141218",
+                        "primary-container": "#6750a4",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-surface-variant": "#cbc4d2",
+                        "surface-container-lowest": "#0f0d13",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#241a00",
+                        "secondary-container": "#4d4465",
+                        "outline": "#948e9c",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface": "#141218",
+                        "on-background": "#e6e0e9",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-variant": "#36343a",
+                        "tertiary": "#e7c365",
+                        "secondary": "#cdc0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "tertiary-container": "#c9a74d",
+                        "surface-bright": "#3b383e",
+                        "surface-container-highest": "#36343a",
+                        "on-primary": "#381e72",
+                        "surface-tint": "#cfbcff",
+                        "on-secondary-container": "#bfb2da",
+                        "on-primary-fixed": "#22005d",
+                        "on-surface": "#e6e0e9",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "background": "#141218",
+                        "inverse-primary": "#6750a4",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-container-high": "#2b292f",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1d1b20",
+                        "on-tertiary": "#3e2e00",
+                        "on-secondary-fixed": "#1f1635",
+                        "inverse-on-surface": "#322f35",
+                        "primary-fixed": "#e9ddff",
+                        "surface-container": "#211f24",
+                        "secondary-fixed": "#e9ddff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "tile-size": "calc((100% - 36px) / 4)",
+                        "container-max": "500px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "grid-gap": "12px",
+                        "stack-sm": "8px",
+                        "grid-padding": "12px"
+                    },
+                    "fontFamily": {
+                        "tile-number-md": ["Sora"],
+                        "ui-button": ["Hanken Grotesk"],
+                        "body-text": ["Hanken Grotesk"],
+                        "score-label": ["JetBrains Mono"],
+                        "modal-title": ["Sora"],
+                        "tile-number-lg": ["Sora"],
+                        "score-value": ["Sora"]
+                    },
+                    "fontSize": {
+                        "tile-number-md": ["36px", { "lineHeight": "36px", "fontWeight": "800" }],
+                        "ui-button": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-text": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "score-label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "modal-title": ["32px", { "lineHeight": "40px", "fontWeight": "800" }],
+                        "tile-number-lg": ["48px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "score-value": ["24px", { "lineHeight": "24px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom pastel tile colors overriding standard dark mode for this theme */
+        .tile-2 { background-color: #ffdab9; color: #503d00; } /* Peach */
+        .tile-4 { background-color: #ffd1a4; color: #503d00; }
+        .tile-8 { background-color: #bdf6e4; color: #1f1635; } /* Mint */
+        .tile-16 { background-color: #a4efd8; color: #1f1635; }
+        .tile-32 { background-color: #a1c6ea; color: #22005d; } /* Sky Blue */
+        .tile-64 { background-color: #8bb8e4; color: #22005d; }
+        .tile-128 { background-color: #ffdf93; color: #503d00; } /* Tertiary */
+        .tile-empty { background-color: rgba(255, 255, 255, 0.1); }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 12px;
+            padding: 12px;
+            background-color: rgba(20, 18, 24, 0.4);
+            border-radius: 0.75rem;
+            width: 100%;
+            aspect-ratio: 1/1;
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .tile {
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-[#e6dfff] dark:bg-[#2a2438] text-on-background min-h-screen flex flex-col font-body-text overflow-hidden selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="w-full top-0 bg-transparent flex justify-between items-center px-grid-padding py-stack-md max-w-container-max mx-auto z-10">
+<button class="text-primary hover:bg-surface-variant rounded-full transition-colors w-10 h-10 flex items-center justify-center active:scale-95 duration-100" data-icon="grid_view">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<h1 class="font-modal-title text-modal-title text-primary tracking-tighter">2048 Tactile</h1>
+<button class="text-primary hover:bg-surface-variant rounded-full transition-colors w-10 h-10 flex items-center justify-center active:scale-95 duration-100" data-icon="settings">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center justify-center px-4 pb-24 w-full max-w-container-max mx-auto">
+<!-- Score Board Area -->
+<div class="flex w-full justify-between gap-4 mb-stack-lg">
+<div class="flex-1 bg-surface-container bg-opacity-50 rounded-lg p-3 flex flex-col items-center justify-center shadow-sm backdrop-blur-sm">
+<span class="font-score-label text-score-label text-on-surface-variant uppercase">Score</span>
+<span class="font-score-value text-score-value text-on-surface mt-1">2,048</span>
+</div>
+<div class="flex-1 bg-surface-container bg-opacity-50 rounded-lg p-3 flex flex-col items-center justify-center shadow-sm backdrop-blur-sm">
+<span class="font-score-label text-score-label text-on-surface-variant uppercase">Best</span>
+<span class="font-score-value text-score-value text-on-surface mt-1">14,236</span>
+</div>
+</div>
+<!-- Game Board Container -->
+<div class="w-full relative">
+<div class="game-grid">
+<!-- Row 1 -->
+<div class="tile tile-empty"></div>
+<div class="tile tile-2 font-tile-number-md text-tile-number-md">2</div>
+<div class="tile tile-empty"></div>
+<div class="tile tile-4 font-tile-number-md text-tile-number-md">4</div>
+<!-- Row 2 -->
+<div class="tile tile-empty"></div>
+<div class="tile tile-8 font-tile-number-md text-tile-number-md">8</div>
+<div class="tile tile-16 font-tile-number-md text-tile-number-md">16</div>
+<div class="tile tile-empty"></div>
+<!-- Row 3 -->
+<div class="tile tile-32 font-tile-number-md text-tile-number-md">32</div>
+<div class="tile tile-empty"></div>
+<div class="tile tile-64 font-tile-number-md text-tile-number-md">64</div>
+<div class="tile tile-2 font-tile-number-md text-tile-number-md">2</div>
+<!-- Row 4 -->
+<div class="tile tile-4 font-tile-number-md text-tile-number-md">4</div>
+<div class="tile tile-128 font-tile-number-md text-tile-number-md">128</div>
+<div class="tile tile-empty"></div>
+<div class="tile tile-empty"></div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container dark:bg-surface-container-lowest rounded-t-xl shadow-[0_-4px_12px_rgba(0,0,0,0.1)] shadow-lg">
+<!-- Undo (Active for demonstration of style, though typically a game action) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-bright dark:hover:bg-surface-variant rounded-xl active:translate-y-[1px] transition-all duration-100" data-icon="undo">
+<span class="material-symbols-outlined mb-1">undo</span>
+<span class="font-ui-button text-ui-button text-xs">Undo</span>
+</button>
+<!-- Reset (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-bright dark:hover:bg-surface-variant rounded-xl active:translate-y-[1px] transition-all duration-100" data-icon="refresh">
+<span class="material-symbols-outlined mb-1">refresh</span>
+<span class="font-ui-button text-ui-button text-xs">Reset</span>
+</button>
+<!-- Themes (Inactive) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:translate-y-[1px] transition-all duration-100" data-icon="palette">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">palette</span>
+<span class="font-ui-button text-ui-button text-xs">Themes</span>
+</button>
+</nav>
+<script>
+        // Simple touch interaction for tiles (visual only)
+        document.querySelectorAll('.tile:not(.tile-empty)').forEach(tile => {
+            tile.addEventListener('touchstart', () => {
+                tile.style.transform = 'scale(0.95)';
+            });
+            tile.addEventListener('touchend', () => {
+                tile.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

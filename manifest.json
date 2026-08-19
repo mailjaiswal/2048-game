@@ -1,0 +1,17 @@
+{
+  "name": "2048 Classic Puzzle",
+  "short_name": "2048",
+  "description": "Join the numbers and get to the 2048 tile! Classic number puzzle game with multiple board sizes, themes, and modes.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#faf8ef",
+  "theme_color": "#8f7a66",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
